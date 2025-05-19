@@ -14,6 +14,14 @@ This document outlines areas for potential improvements in the wallet service, o
 - **Why**: A user/wallet owner may own multiple wallets or even multiple types of accounts from the company. Associating an account/wallet to a user enables this
 - **How**: Create a separate user table and make the existing user_id column in the wallets table a foreign key
 
+### 3. Make the transaction schema more extensible for new transaction types
+- **Why**: There could be other transaction types like authorisations or even for other types of accounts like lending which have a drawdown
+- **How**: We can just keep the type column as kind of like a metadata that can be of any value instead of checking against specific set of types
+
+### 4. Better mapping of internal errors to HTTP error codes
+- **Why**: This ensures that all errors produced by the system are mapped to an appropriate client facing error.
+- **How**: Improve the repository of errors we currently have and create better mapping of those errors to corresponding http codes
+
 ---
 
 ## Performance Improvements
@@ -61,6 +69,14 @@ This document outlines areas for potential improvements in the wallet service, o
 ### 3. Transaction Integrity (Double Spending Prevention)
 - **Why**: To ensure no race conditions in wallet updates.
 - **How**: Use DB row-level locks (`SELECT FOR UPDATE`) or distributed locks if needed. Optimistic locks such as using an update count can also be used
+
+### 4. Hiding Secrets like passwords and DB info
+- **Why**: No files on the repository should contain passwords and even potentially usernames for security
+- **How**: Hashicorp vault can be used to keep such secrets and loaded from there by the service
+
+### 5. Improve masking of internal errors
+- **Why**: Internal errors should only be visible in internal logging to ensure that no information on our infrastructure is exposed
+- **How**: With better mapping of errors and better catching of these in the handler we can respond to the client with more generic error messages
 
 ---
 

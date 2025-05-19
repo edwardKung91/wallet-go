@@ -2,6 +2,7 @@
 
 # Decisions
 - Included a user_id as a part of the wallet table to show that we eventually want to include an owner for each wallet
+- 1 User can only have 1 Wallet
 - All the ids, including waller and user ids, are UUIDs because usually banks/fintechs enforce a format for their account numbers/ids. I chose to use UUIDs as there are generators available online
 - The APIs should ideally also ideally include ways to provide Ids from upstream instead of just creating its own and streaming it out but as a Phase 1 take home assignment i chose to go with simple implementations
 - Idempotency keys should ideally have been created as well to prevent duplicate requests and allow for retry functionality but as an initial submission I chose to make the transactions simple
