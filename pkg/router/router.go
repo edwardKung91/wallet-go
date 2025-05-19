@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"wallet-go/internal/wallet"
+	"wallet-go/pkg/wallet"
 )
 
 func Setup(db *sql.DB) http.Handler {

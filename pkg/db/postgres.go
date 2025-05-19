@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	_ "github.com/lib/pq"
 	"log"
-	"wallet-go/internal/config"
+	"wallet-go/pkg/config"
 )
 
 func InitPostgres() *sql.DB {
