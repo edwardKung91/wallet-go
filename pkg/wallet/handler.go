@@ -9,14 +9,14 @@ import (
 	"github.com/google/uuid" // Used to generate and parse UUIDs
 )
 
-// Handler struct holds a reference to the wallet service.
-type Handler struct {
-	service *Service
+// handler struct holds a reference to the wallet service.
+type handler struct {
+	service *service
 }
 
 // NewHandler creates a new handler instance with an initialized wallet service.
-func NewHandler(db *sql.DB) *Handler {
-	return &Handler{service: NewService(db)}
+func NewHandler(db *sql.DB) *handler {
+	return &handler{service: NewService(db)}
 }
 
 type TransactionResponse struct {
@@ -33,7 +33,7 @@ func writeJSON(w http.ResponseWriter, status int, data interface{}) {
 }
 
 // CreateWallet handles the API request to create a wallet for a user.
-func (h *Handler) CreateWallet(w http.ResponseWriter, r *http.Request) {
+func (h *handler) CreateWallet(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		UserID string `json:"user_id"` // The user ID that the wallet is for
 	}
@@ -69,7 +69,7 @@ func (h *Handler) CreateWallet(w http.ResponseWriter, r *http.Request) {
 }
 
 // Deposit handles the API request to deposit funds into a wallet.
-func (h *Handler) Deposit(w http.ResponseWriter, r *http.Request) {
+func (h *handler) Deposit(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		WalletID string `json:"wallet_id"`
 		Amount   int64  `json:"amount"`
@@ -113,7 +113,7 @@ func (h *Handler) Deposit(w http.ResponseWriter, r *http.Request) {
 }
 
 // Withdraw handles the API request to withdraw funds from a wallet.
-func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
+func (h *handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		WalletID string `json:"wallet_id"`
 		Amount   int64  `json:"amount"`
@@ -157,7 +157,7 @@ func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 }
 
 // Transfer handles transferring funds from one wallet to another.
-func (h *Handler) Transfer(w http.ResponseWriter, r *http.Request) {
+func (h *handler) Transfer(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		FromID string `json:"from_id"`
 		ToID   string `json:"to_id"`
@@ -212,7 +212,7 @@ func (h *Handler) Transfer(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetBalance handles retrieving the wallet balance.
-func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
+func (h *handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 	// Extract wallet_id from query parameters
 	walletIDStr := r.URL.Query().Get("wallet_id")
 	walletID, _ := uuid.Parse(walletIDStr)
@@ -229,7 +229,7 @@ func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetTransactions returns the transaction history for a wallet.
-func (h *Handler) GetTransactions(w http.ResponseWriter, r *http.Request) {
+func (h *handler) GetTransactions(w http.ResponseWriter, r *http.Request) {
 	// Extract wallet_id from query parameters
 	walletIDStr := r.URL.Query().Get("wallet_id")
 	walletID, _ := uuid.Parse(walletIDStr)

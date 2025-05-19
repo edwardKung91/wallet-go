@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-func newTestService(t *testing.T) (*Service, sqlmock.Sqlmock, func()) {
+func newTestService(t *testing.T) (*service, sqlmock.Sqlmock, func()) {
 	db, mock, err := sqlmock.New()
 	assert.NoError(t, err)
 
-	svc := &Service{db: db}
+	svc := &service{db: db}
 	return svc, mock, func() { db.Close() }
 }
 

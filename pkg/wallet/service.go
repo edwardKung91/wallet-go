@@ -6,18 +6,18 @@ import (
 	"time"                   // For timestamps
 )
 
-// Service struct holds the DB reference and encapsulates business logic.
-type Service struct {
+// service struct holds the DB reference and encapsulates business logic.
+type service struct {
 	db *sql.DB
 }
 
 // NewService initializes a new service instance with the given DB connection.
-func NewService(db *sql.DB) *Service {
-	return &Service{db: db}
+func NewService(db *sql.DB) *service {
+	return &service{db: db}
 }
 
 // WalletExists Checks if the wallet to be updated exists
-func (s *Service) WalletExists(walletID uuid.UUID) (bool, error) {
+func (s *service) WalletExists(walletID uuid.UUID) (bool, error) {
 	var exists bool
 	err := s.db.QueryRow(`SELECT EXISTS(SELECT 1 FROM wallets WHERE id = $1)`, walletID).Scan(&exists)
 	if err != nil {
@@ -27,17 +27,17 @@ func (s *Service) WalletExists(walletID uuid.UUID) (bool, error) {
 }
 
 // CreateWallet inserts a new wallet with zero balance for a user.
-func (s *Service) CreateWallet(userID uuid.UUID) (*Wallet, error) {
+func (s *service) CreateWallet(userID uuid.UUID) (*wallet, error) {
 	id := uuid.New() // Generate a new wallet UUID
 	_, err := s.db.Exec(`INSERT INTO wallets (id, user_id, balance) VALUES ($1, $2, $3)`, id, userID, 0)
 	if err != nil {
 		return nil, err
 	}
-	return &Wallet{ID: id, UserID: userID, Balance: 0}, nil
+	return &wallet{ID: id, UserID: userID, Balance: 0}, nil
 }
 
 // Deposit adds money to a specific wallet and logs the transaction.
-func (s *Service) Deposit(walletID uuid.UUID, amount int64) (uuid.UUID, error) {
+func (s *service) Deposit(walletID uuid.UUID, amount int64) (uuid.UUID, error) {
 	if amount <= 0 {
 		return uuid.Nil, ErrInvalidAmount
 	}
@@ -81,7 +81,7 @@ func (s *Service) Deposit(walletID uuid.UUID, amount int64) (uuid.UUID, error) {
 }
 
 // Withdraw subtracts money from a wallet if there's enough balance.
-func (s *Service) Withdraw(walletID uuid.UUID, amount int64) (uuid.UUID, error) {
+func (s *service) Withdraw(walletID uuid.UUID, amount int64) (uuid.UUID, error) {
 	if amount <= 0 {
 		return uuid.Nil, ErrInvalidAmount
 	}
@@ -135,7 +135,7 @@ func (s *Service) Withdraw(walletID uuid.UUID, amount int64) (uuid.UUID, error) 
 }
 
 // Transfer moves funds from one wallet to another in a single atomic transaction.
-func (s *Service) Transfer(fromID, toID uuid.UUID, amount int64) (uuid.UUID, error) {
+func (s *service) Transfer(fromID, toID uuid.UUID, amount int64) (uuid.UUID, error) {
 	if amount <= 0 {
 		return uuid.Nil, ErrInvalidAmount
 	}
@@ -206,7 +206,7 @@ func (s *Service) Transfer(fromID, toID uuid.UUID, amount int64) (uuid.UUID, err
 }
 
 // GetBalance returns the current balance of a wallet.
-func (s *Service) GetBalance(walletID uuid.UUID) (int64, error) {
+func (s *service) GetBalance(walletID uuid.UUID) (int64, error) {
 	var balance int64
 
 	exists, err := s.WalletExists(walletID)
@@ -225,7 +225,7 @@ func (s *Service) GetBalance(walletID uuid.UUID) (int64, error) {
 }
 
 // GetTransactions fetches all transactions where the wallet was either sender or receiver.
-func (s *Service) GetTransactions(walletID uuid.UUID) ([]Transaction, error) {
+func (s *service) GetTransactions(walletID uuid.UUID) ([]transaction, error) {
 
 	exists, err := s.WalletExists(walletID)
 	if err != nil {
@@ -245,9 +245,9 @@ func (s *Service) GetTransactions(walletID uuid.UUID) ([]Transaction, error) {
 	}
 	defer rows.Close()
 
-	var txns []Transaction
+	var txns []transaction
 	for rows.Next() {
-		var txn Transaction
+		var txn transaction
 		err := rows.Scan(&txn.ID, &txn.FromWallet, &txn.ToWallet, &txn.Amount, &txn.Type, &txn.CreatedAt)
 		if err != nil {
 			return nil, err
