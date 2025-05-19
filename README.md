@@ -71,12 +71,11 @@ Response:
 ```
 
 ### 2. Deposit Money
-    POST /wallet/deposit
+    POST /wallet/UUID-of-wallet/deposit
 
 Request Body:
 ```
 {
-    "wallet_id": "UUID-of-wallet",
     "amount": 5000
 }
 ```
@@ -97,12 +96,11 @@ Response:
 ```
 
 ### 3. Withdraw Money
-    POST /wallet/withdraw
+    POST /wallet/UUID-of-wallet/withdraw
 
 Request Body:
 ```
 {
-    "wallet_id": "UUID-of-wallet",
     "amount": 2000
 }
 ```
@@ -150,7 +148,7 @@ Response:
 ```
 
 ### 5. Get Wallet Balance
-    GET /wallet/balance?wallet_id=UUID-of-wallet
+    GET /wallet/UUID-of-wallet/balance
 
 Example:
 ```
@@ -165,7 +163,7 @@ Response:
 ```
 
 ### 6. Get Transaction History
-    GET /wallet/transactions?wallet_id=UUID-of-wallet
+    GET /wallet/UUID-of-wallet/transactions
 
 Example:
 ```

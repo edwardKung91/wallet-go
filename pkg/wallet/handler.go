@@ -3,7 +3,8 @@ package wallet
 import (
 	"database/sql"  // Provides SQL DB interaction functions
 	"encoding/json" // Used to parse and return JSON
-	"net/http"      // Used for HTTP request/response handling
+	"github.com/gorilla/mux"
+	"net/http" // Used for HTTP request/response handling
 	"strings"
 
 	"github.com/google/uuid" // Used to generate and parse UUIDs
@@ -70,25 +71,28 @@ func (h *handler) CreateWallet(w http.ResponseWriter, r *http.Request) {
 
 // Deposit handles the API request to deposit funds into a wallet.
 func (h *handler) Deposit(w http.ResponseWriter, r *http.Request) {
+	// Extract wallet_id from URL path
+	vars := mux.Vars(r)
+	walletIDStr := vars["wallet_id"]
+
+	// Validate UUID
+	walletID, err := uuid.Parse(strings.TrimSpace(walletIDStr))
+	if err != nil {
+		writeJSON(w, http.StatusBadRequest, TransactionResponse{
+			Status: "error",
+			Error:  "Invalid wallet_id format (must be UUID)",
+		})
+		return
+	}
+
 	var body struct {
-		WalletID string `json:"wallet_id"`
-		Amount   int64  `json:"amount"`
+		Amount int64 `json:"amount"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		writeJSON(w, http.StatusBadRequest, TransactionResponse{
 			Status: "error",
 			Error:  "Invalid JSON body",
-		})
-		return
-	}
-
-	// Validate UUID format
-	walletID, err := uuid.Parse(strings.TrimSpace(body.WalletID))
-	if err != nil {
-		writeJSON(w, http.StatusBadRequest, TransactionResponse{
-			Status: "error",
-			Error:  "Invalid wallet_id format (must be UUID)",
 		})
 		return
 	}
@@ -114,25 +118,28 @@ func (h *handler) Deposit(w http.ResponseWriter, r *http.Request) {
 
 // Withdraw handles the API request to withdraw funds from a wallet.
 func (h *handler) Withdraw(w http.ResponseWriter, r *http.Request) {
+	// Extract wallet_id from URL path
+	vars := mux.Vars(r)
+	walletIDStr := vars["wallet_id"]
+
+	// Validate UUID
+	walletID, err := uuid.Parse(strings.TrimSpace(walletIDStr))
+	if err != nil {
+		writeJSON(w, http.StatusBadRequest, TransactionResponse{
+			Status: "error",
+			Error:  "Invalid wallet_id format (must be UUID)",
+		})
+		return
+	}
+
 	var body struct {
-		WalletID string `json:"wallet_id"`
-		Amount   int64  `json:"amount"`
+		Amount int64 `json:"amount"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		writeJSON(w, http.StatusBadRequest, TransactionResponse{
 			Status: "error",
 			Error:  "Invalid JSON body",
-		})
-		return
-	}
-
-	// Validate UUID format
-	walletID, err := uuid.Parse(strings.TrimSpace(body.WalletID))
-	if err != nil {
-		writeJSON(w, http.StatusBadRequest, TransactionResponse{
-			Status: "error",
-			Error:  "Invalid wallet_id format (must be UUID)",
 		})
 		return
 	}
@@ -213,9 +220,19 @@ func (h *handler) Transfer(w http.ResponseWriter, r *http.Request) {
 
 // GetBalance handles retrieving the wallet balance.
 func (h *handler) GetBalance(w http.ResponseWriter, r *http.Request) {
-	// Extract wallet_id from query parameters
-	walletIDStr := r.URL.Query().Get("wallet_id")
-	walletID, _ := uuid.Parse(walletIDStr)
+	// Extract wallet_id from URL path
+	vars := mux.Vars(r)
+	walletIDStr := vars["wallet_id"]
+
+	// Validate UUID
+	walletID, err := uuid.Parse(strings.TrimSpace(walletIDStr))
+	if err != nil {
+		writeJSON(w, http.StatusBadRequest, TransactionResponse{
+			Status: "error",
+			Error:  "Invalid wallet_id format (must be UUID)",
+		})
+		return
+	}
 
 	// Get balance from the service
 	balance, err := h.service.GetBalance(walletID)
@@ -230,9 +247,19 @@ func (h *handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 
 // GetTransactions returns the transaction history for a wallet.
 func (h *handler) GetTransactions(w http.ResponseWriter, r *http.Request) {
-	// Extract wallet_id from query parameters
-	walletIDStr := r.URL.Query().Get("wallet_id")
-	walletID, _ := uuid.Parse(walletIDStr)
+	// Extract wallet_id from URL path
+	vars := mux.Vars(r)
+	walletIDStr := vars["wallet_id"]
+
+	// Validate UUID
+	walletID, err := uuid.Parse(strings.TrimSpace(walletIDStr))
+	if err != nil {
+		writeJSON(w, http.StatusBadRequest, TransactionResponse{
+			Status: "error",
+			Error:  "Invalid wallet_id format (must be UUID)",
+		})
+		return
+	}
 
 	// Retrieve transactions
 	txns, err := h.service.GetTransactions(walletID)
