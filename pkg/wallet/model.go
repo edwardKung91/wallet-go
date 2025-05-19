@@ -21,3 +21,12 @@ type transaction struct {
 	Type       string     `json:"type"`        // Type of transaction: deposit, withdrawal, transfer
 	CreatedAt  time.Time  `json:"created_at"`  // Timestamp of the transaction
 }
+
+type Service interface {
+	CreateWallet(userID uuid.UUID) (*wallet, error)
+	Deposit(walletID uuid.UUID, amount int64) (uuid.UUID, error)
+	Withdraw(walletID uuid.UUID, amount int64) (uuid.UUID, error)
+	Transfer(fromID, toID uuid.UUID, amount int64) (uuid.UUID, error)
+	GetBalance(walletID uuid.UUID) (int64, error)
+	GetTransactions(walletID uuid.UUID) ([]transaction, error)
+}

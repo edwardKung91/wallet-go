@@ -10,7 +10,8 @@ import (
 
 func Setup(db *sql.DB) http.Handler {
 	r := mux.NewRouter()
-	h := wallet.NewHandler(db)
+	s := wallet.NewService(db)
+	h := wallet.NewHandler(s)
 
 	r.HandleFunc("/wallet", h.CreateWallet).Methods("POST")
 	r.HandleFunc("/wallet/{wallet_id}/deposit", h.Deposit).Methods("POST")

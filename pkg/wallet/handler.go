@@ -1,7 +1,6 @@
 package wallet
 
 import (
-	"database/sql"  // Provides SQL DB interaction functions
 	"encoding/json" // Used to parse and return JSON
 	"github.com/gorilla/mux"
 	"net/http" // Used for HTTP request/response handling
@@ -12,12 +11,12 @@ import (
 
 // handler struct holds a reference to the wallet service.
 type handler struct {
-	service *service
+	service Service
 }
 
 // NewHandler creates a new handler instance with an initialized wallet service.
-func NewHandler(db *sql.DB) *handler {
-	return &handler{service: NewService(db)}
+func NewHandler(svc Service) *handler {
+	return &handler{service: svc}
 }
 
 type TransactionResponse struct {

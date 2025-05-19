@@ -257,3 +257,6 @@ func (s *service) GetTransactions(walletID uuid.UUID) ([]transaction, error) {
 
 	return txns, nil
 }
+
+// Compile-time check to ensure service implements Service interface
+var _ Service = (*service)(nil)
