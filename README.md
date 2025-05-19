@@ -4,10 +4,6 @@ A simple wallet microservice written in Go.
 
 ## This Code was developed in windows environment
 
-## Recommended Versions
-- Go -> go version go1.24.3 windows/amd64
-- Postgres -> 17.5
-
 ## Features
 
 - Create wallet
@@ -21,12 +17,27 @@ A simple wallet microservice written in Go.
 - PostgreSQL
 - Gorilla Mux
 
+## Pre-requisite
+- Postgres is installed
+- Go is available
+- This whole set up was run without proxies or firewall settings turned on in a local env
+
+## Recommended Versions
+- Go -> go version go1.24.3 windows/amd64
+- Postgres -> 17.5
+
 ## Setup
 
-1. Create PostgreSQL database named `wallet`
-2. Run schema from `schema.sql`
-3. Set your DB credentials in `.env`
-4. Start the server:
+1. Set your DB credentials in `.env`. This file will contain the following
+```
+DB_HOST= <set with the hostname used by your postgres setup>
+DB_PORT= <set with the port used by your postgres setup>
+DB_USER= <set with a valid username on your postgres setup>
+DB_PASSWORD= <set with the password of the username from before>
+DB_NAME=wallet (please do not change this)
+DB_SSLMODE=disable (please do not change this)
+```
+2. Start the server:
 
 ```bash
 go run ./cmd/server

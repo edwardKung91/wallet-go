@@ -35,10 +35,18 @@ func GetDBConfig() DBConfig {
 	}
 }
 
-// GetDSN builds the PostgreSQL DSN string
-func (cfg DBConfig) GetDSN() string {
+// GetMainDSN builds the PostgreSQL DSN string for the main DB
+func (cfg DBConfig) GetMainDSN() string {
 	return fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.Name, cfg.SSLMode,
+	)
+}
+
+// GetDefaultDSN builds the PostgreSQL DSN string for the default user
+func (cfg DBConfig) GetDefaultDSN() string {
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/postgres?sslmode=disable",
+		cfg.User, cfg.Password, cfg.Host, cfg.Port,
 	)
 }
