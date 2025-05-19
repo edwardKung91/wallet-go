@@ -2,6 +2,12 @@
 
 A simple wallet microservice written in Go.
 
+## This Code was developed in windows environment
+
+## Recommended Versions
+- Go -> go version go1.24.3 windows/amd64
+- Postgres -> 17.5
+
 ## Features
 
 - Create wallet
@@ -70,8 +76,8 @@ Response:
 Request Body:
 ```
 {
-"wallet_id": "UUID-of-wallet",
-"amount": 5000
+    "wallet_id": "UUID-of-wallet",
+    "amount": 5000
 }
 ```
 
@@ -84,7 +90,10 @@ curl -X POST http://localhost:8080/wallet/deposit \
 
 Response:
 ```
-HTTP 204 No Content
+{
+    "status": "success",
+    "transaction_id": "UUID-of-transaction"
+}
 ```
 
 ### 3. Withdraw Money
@@ -93,8 +102,8 @@ HTTP 204 No Content
 Request Body:
 ```
 {
-"wallet_id": "UUID-of-wallet",
-"amount": 2000
+    "wallet_id": "UUID-of-wallet",
+    "amount": 2000
 }
 ```
 
@@ -107,7 +116,10 @@ curl -X POST http://localhost:8080/wallet/withdraw \
 
 Response:
 ```
-HTTP 204 No Content
+{
+    "status": "success",
+    "transaction_id": "UUID-of-transaction"
+}
 ```
 
 ### 4. Transfer Money
@@ -116,9 +128,9 @@ HTTP 204 No Content
 Request Body:
 ```
 {
-"from_id": "UUID-of-sender-wallet",
-"to_id": "UUID-of-recipient-wallet",
-"amount": 1000
+    "from_id": "UUID-of-sender-wallet",
+    "to_id": "UUID-of-recipient-wallet",
+    "amount": 1000
 }
 ```
 
@@ -131,7 +143,10 @@ curl -X POST http://localhost:8080/wallet/transfer \
 
 Response:
 ```
-HTTP 204 No Content
+{
+    "status": "success",
+    "transaction_id": "UUID-of-transaction"
+}
 ```
 
 ### 5. Get Wallet Balance
@@ -145,7 +160,7 @@ curl http://localhost:8080/wallet/balance?wallet_id=wallet-uuid
 Response:
 ```
 {
-"balance": 3000
+    "balance": 3000
 }
 ```
 

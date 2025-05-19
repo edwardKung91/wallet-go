@@ -1,3 +1,5 @@
+# This Code was developed in windows environment
+
 # Decisions
 - Included a user_id as a part of the wallet table to show that we eventually want to include an owner for each wallet
 - All the ids, including waller and user ids, are UUIDs because usually banks/fintechs enforce a format for their account numbers/ids. I chose to use UUIDs as there are generators available online

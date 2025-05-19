@@ -1,4 +1,4 @@
-module go-wallet
+module wallet-go
 
 go 1.24.3
 

@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"go-wallet/internal/db"
-	"go-wallet/internal/router"
+	"wallet-go/internal/db"
+	"wallet-go/internal/router"
 )
 
 func main() {

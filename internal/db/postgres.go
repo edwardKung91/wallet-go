@@ -3,8 +3,8 @@ package db
 import (
 	"database/sql"
 	_ "github.com/lib/pq"
-	"go-wallet/internal/config"
 	"log"
+	"wallet-go/internal/config"
 )
 
 func InitPostgres() *sql.DB {
