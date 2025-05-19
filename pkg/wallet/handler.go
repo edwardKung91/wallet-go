@@ -60,7 +60,7 @@ func (h *handler) CreateWallet(w http.ResponseWriter, r *http.Request) {
 	// Call the service to create a wallet
 	wallet, err := h.service.CreateWallet(userID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Wallet Creation failed", http.StatusInternalServerError)
 		return
 	}
 

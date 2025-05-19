@@ -3,7 +3,8 @@ package wallet
 import (
 	"database/sql"           // SQL DB operations
 	"github.com/google/uuid" // UUID generation and parsing
-	"time"                   // For timestamps
+	"log"
+	"time" // For timestamps
 )
 
 // service struct holds the DB reference and encapsulates business logic.
@@ -21,6 +22,7 @@ func (s *service) WalletExists(walletID uuid.UUID) (bool, error) {
 	var exists bool
 	err := s.db.QueryRow(`SELECT EXISTS(SELECT 1 FROM wallets WHERE id = $1)`, walletID).Scan(&exists)
 	if err != nil {
+		log.Printf("DB Select error: %v", err)
 		return false, err
 	}
 	return exists, nil
@@ -31,6 +33,7 @@ func (s *service) CreateWallet(userID uuid.UUID) (*wallet, error) {
 	id := uuid.New() // Generate a new wallet UUID
 	_, err := s.db.Exec(`INSERT INTO wallets (id, user_id, balance) VALUES ($1, $2, $3)`, id, userID, 0)
 	if err != nil {
+		log.Printf("DB Insertion error: %v", err)
 		return nil, err
 	}
 	return &wallet{ID: id, UserID: userID, Balance: 0}, nil
@@ -53,6 +56,7 @@ func (s *service) Deposit(walletID uuid.UUID, amount int64) (uuid.UUID, error) {
 	// Begin transaction to ensure atomicity
 	txn, err := s.db.Begin()
 	if err != nil {
+		log.Printf("DB Begin error: %v", err)
 		return uuid.Nil, err
 	}
 	defer txn.Rollback()
@@ -60,6 +64,7 @@ func (s *service) Deposit(walletID uuid.UUID, amount int64) (uuid.UUID, error) {
 	// Update wallet balance
 	_, err = txn.Exec(`UPDATE wallets SET balance = balance + $1 WHERE id = $2`, amount, walletID)
 	if err != nil {
+		log.Printf("DB Update error: %v", err)
 		return uuid.Nil, err
 	}
 
@@ -70,10 +75,12 @@ func (s *service) Deposit(walletID uuid.UUID, amount int64) (uuid.UUID, error) {
                       VALUES ($1, NULL, $2, $3, $4, $5)`,
 		txnId, walletID, amount, TxnTypeDeposit, time.Now())
 	if err != nil {
+		log.Printf("DB Insert error: %v", err)
 		return uuid.Nil, err
 	}
 
 	if err := txn.Commit(); err != nil {
+		log.Printf("DB Commit error: %v", err)
 		return uuid.Nil, err
 	}
 
@@ -104,6 +111,7 @@ func (s *service) Withdraw(walletID uuid.UUID, amount int64) (uuid.UUID, error) 
 	var balance int64
 	err = txn.QueryRow(`SELECT balance FROM wallets WHERE id = $1`, walletID).Scan(&balance)
 	if err != nil {
+		log.Printf("DB Select error: %v", err)
 		return uuid.Nil, err
 	}
 
@@ -114,6 +122,7 @@ func (s *service) Withdraw(walletID uuid.UUID, amount int64) (uuid.UUID, error) 
 	// Deduct from wallet
 	_, err = txn.Exec(`UPDATE wallets SET balance = balance - $1 WHERE id = $2`, amount, walletID)
 	if err != nil {
+		log.Printf("DB UPDATE error: %v", err)
 		return uuid.Nil, err
 	}
 
@@ -124,6 +133,7 @@ func (s *service) Withdraw(walletID uuid.UUID, amount int64) (uuid.UUID, error) 
                       VALUES ($1, $2, NULL, $3, $4, $5)`,
 		txnId, walletID, amount, TxnTypeWithdrawal, time.Now())
 	if err != nil {
+		log.Printf("DB Insert error: %v", err)
 		return uuid.Nil, err
 	}
 
