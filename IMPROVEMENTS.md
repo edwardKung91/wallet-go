@@ -114,5 +114,9 @@ This document outlines areas for potential improvements in the wallet service, o
 - **Why**: Auto-generate client SDKs and API docs.
 - **How**: Use Swagger annotations or `go-swagger`.
 
+### 3. Improve internal logging
+- **Why**: This allows for better debugging and faster identification of issues
+- **How**: We cannot just put logs everywhere. Logging when errors occur is a must and logging before and after critical code sections and even during critical parts of code is also important
+
 ---
 
