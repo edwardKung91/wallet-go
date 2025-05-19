@@ -8,9 +8,60 @@
 - Creating DB level locks or optimistic locking mechanism should are also something I chose to skip for now for simplicity
 
 # Reviewers
-- internal/wallet contains all the service and handler logic
-  - this also contains all service level unit tests
-- internal/router handles routing for requests received
+```
+wallet-go
+| - cmd
+| - |
+| - | - server
+| - | - |
+| - | - |- main.go -> "This handles service initialisation"
+| - |
+| - pkg -> "All service related files and components are here"
+| - |
+| - | - config
+| - | - |
+| - | - | - config.go -> "This loads all the DB related configurations from a .env file"
+| - |
+| - | - db
+| - | - |
+| - | - | - schema
+| - | - | - |
+| - | - | - | - schema.sql -> "This contains the table creation SQL queries for use in the service"
+| - | - |
+| - | - | - db_init.go -> "This contains functions for initialising the db and the db tables"
+| - | - |
+| - | - | - postgres.go -> "This initialises the DB and also returns the DB connection to be used by the service"
+| - |
+| - | - router
+| - | - |
+| - | - | - router.go -> "This contanins the service and handler instanciation and the definition of external APIs"
+| - |
+| - | - wallet -> "Contains all files relating to the service itself
+| - | - |
+| - | - | - constants.go -> "Contains definition of constants used within the service"
+| - | - |
+| - | - | - errors.go -> "contains definition of errors used with in the service"
+| - | - |
+| - | - | - handler.go -> "contains the logic to process each request and pass it on to an appropriate backend function"
+| - | - |
+| - | - | - handler_test.go -> "test for the main handlers"
+| - | - |
+| - | - | - mock_service.go -> "contains mock services for the handler tests"
+| - | - |
+| - | - | - model.go -> "contains struct definitions for structures used by the service
+| - | - |
+| - | - | - service.go -> "contains the backend logic that needs to be performed to service each request"
+| - | - |
+| - | - | - service_test.go -> "tests for the main service functions"
+| 
+| - .env -> "contains values for DB configuration"
+|
+| - ASSUMPTIONS.md -> "contains assumptions and also file directory for reviewers
+|
+| - IMPROVEMENTS.md -> "contains potential improvements to the existing code"
+|
+| - README.md -> "contains instructions on how to use the APIs and how to run the server"
+```
 
 # Time spent
-- 8hrs total
+- 12hrs total

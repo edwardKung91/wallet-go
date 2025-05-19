@@ -2,6 +2,11 @@
 
 A simple wallet microservice written in Go.
 
+# IMPORTANT
+- This README file contains instructions on how to run the server and how to use the APIs
+- The ASSUMPTIONS file contains some assumptions made and also the file structure of the code and small description to help reviewers
+- The IMPROVEMENTS file contains some potential improvements to be made onto the code and design
+
 ## This Code was developed in windows environment
 
 ## Features
@@ -12,7 +17,6 @@ A simple wallet microservice written in Go.
 - View balance and transaction history
 
 ## Tech Stack
-
 - Golang
 - PostgreSQL
 - Gorilla Mux
