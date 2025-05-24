@@ -71,10 +71,11 @@ Request Body:
 
 Example:
 ```
-curl -X POST http://localhost:8080/wallet \
--H "Content-Type: application/json" \
--d '{"user_id":"123e4567-e89b-12d3-a456-426614174000"}'
-Response:
+curl --location 'http://localhost:8080/wallet' \
+--header 'Content-Type: text/plain' \
+--data '{
+    "user_id":"123e4567-e89b-12d3-a456-426614174000"
+}'
 ```
 Response:
 ```
@@ -97,9 +98,11 @@ Request Body:
 
 Example:
 ```
-curl -X POST http://localhost:8080/wallet/deposit \
--H "Content-Type: application/json" \
--d '{"wallet_id":"wallet-uuid", "amount":5000}'
+curl --location 'http://localhost:8080/wallet/UUID-of-wallet/deposit' \
+--header 'Content-Type: application/json' \
+--data '{
+    "amount": 5000
+}'
 ```
 
 Response:
@@ -122,9 +125,11 @@ Request Body:
 
 Example:
 ```
-curl -X POST http://localhost:8080/wallet/withdraw \
--H "Content-Type: application/json" \
--d '{"wallet_id":"wallet-uuid", "amount":2000}'
+curl --location 'http://localhost:8080/wallet/UUID-of-wallet/withdraw' \
+--header 'Content-Type: text/plain' \
+--data '{
+    "amount": 2000
+}'
 ```
 
 Response:
@@ -167,7 +172,7 @@ Response:
 
 Example:
 ```
-curl http://localhost:8080/wallet/balance?wallet_id=wallet-uuid
+curl --location 'http://localhost:8080/wallet/UUID-of-wallet/balance'
 ```
 
 Response:
@@ -182,7 +187,7 @@ Response:
 
 Example:
 ```
-curl http://localhost:8080/wallet/transactions?wallet_id=wallet-uuid
+curl --location 'http://localhost:8080/wallet/UUID-of-wallet/transactions'
 ```
 
 Response:
